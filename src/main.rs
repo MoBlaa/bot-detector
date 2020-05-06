@@ -1,4 +1,3 @@
-extern crate crossbeam_queue;
 #[macro_use]
 extern crate log;
 extern crate pretty_env_logger;
@@ -6,15 +5,14 @@ extern crate pretty_env_logger;
 use irc_rust::message::Message;
 use log::LevelFilter;
 use pretty_env_logger::env_logger::WriteStyle;
-use tungstenite::{connect, WebSocket};
-use tungstenite::client::AutoStream;
+use tungstenite::{connect};
 use tungstenite::Message as WsMessage;
 use url::Url;
 
 use crate::queue::Queue;
-use std::ops::Index;
 use std::str::FromStr;
 use chrono::{NaiveDateTime, Duration};
+use std::cmp::Ordering;
 
 mod queue;
 
@@ -27,9 +25,9 @@ fn main() {
         .write_style(WriteStyle::Always)
         .init();
 
-    let token = std::env::var("BDET_TOKEN").ok().expect("missing environment variable BDET_TOKEN");
-    let nick = std::env::var("BDET_NICK").ok().expect("missing environment variable BDET_NICK");
-    let channel = std::env::var("BDET_CHANNEL").ok().expect("missing encironment variable BDET_CHANNEL");
+    let token = std::env::var("BDET_TOKEN").expect("missing environment variable BDET_TOKEN");
+    let nick = std::env::var("BDET_NICK").expect("missing environment variable BDET_NICK");
+    let channel = std::env::var("BDET_CHANNEL").expect("missing encironment variable BDET_CHANNEL");
 
     let (mut socket, response) = connect(Url::parse("wss://irc-ws.chat.twitch.tv:443").unwrap()).expect("Can't connect to Twitch");
 
@@ -112,12 +110,10 @@ fn main() {
                     let tags = msg.tags().unwrap();
                     let followers_only_duration = i64::from_str(&tags["followers-only"])
                         .expect("invalid duration");
-                    if followers_only_duration < 0 {
-                        info!("Room is no longer in followers-only mode!");
-                    } else if followers_only_duration == 0 {
-                        info!("Room is in followers-only mode!");
-                    } else {
-                        info!("Room is now in {}m followers-only mode!", followers_only_duration);
+                    match 0.cmp(&followers_only_duration) {
+                        Ordering::Less => info!("Room is no longer in followers-only mode!"),
+                        Ordering::Equal => info!("Room is in followers-only mode!"),
+                        Ordering::Greater => info!("Room is now in {}m followers-only mode!", followers_only_duration)
                     }
                 }
                 "001" | "002" | "003" | "004" | "375" | "372" | "376" | "353" | "366" => (),

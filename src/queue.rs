@@ -1,7 +1,5 @@
-use std::time::{Instant};
 use std::sync::{Arc, RwLock};
-use std::ops::Sub;
-use chrono::{DateTime, NaiveDateTime, Utc, Duration};
+use chrono::{NaiveDateTime, Utc, Duration};
 
 pub type Entry = (NaiveDateTime, String);
 
