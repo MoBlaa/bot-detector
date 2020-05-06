@@ -86,7 +86,6 @@ fn main() {
                     let secs = (time / 1000) as i64;
                     let nanos = ((time % 1000) * 1000 * 1000) as u32;
                     let timestamp = NaiveDateTime::from_timestamp(secs, nanos);
-                    debug!("Received message sent @ '{}' = '{}'", time, timestamp);
                     if !queue.add((timestamp, name.to_string())) {
                         warn!("Activating follower only Mode!");
                         if let Err(why) = socket
@@ -95,12 +94,17 @@ fn main() {
                         }
                     }
                 }
-                "JOIN" => info!("Successfully joined {}!", msg.params().unwrap().iter().next().unwrap()),
+                "JOIN" => {
+                    let prefix = msg.prefix().expect("join without predix");
+                    if prefix.name() == nick {
+                        info!("Successfully joined {}!", msg.params().unwrap().iter().next().unwrap());
+                    }
+                },
                 "CAP" => {
                     let params = msg.params().unwrap();
                     let mut iter = params.iter();
                     match (iter.next(), iter.next()) {
-                        (Some("*"), Some("ACK")) => info!("Successfully obtained capability for '{}'!", params.trailing.unwrap()),
+                        (Some("*"), Some("ACK")) => debug!("Successfully obtained capability for '{}'!", params.trailing.unwrap()),
                         _ => warn!("failed to obtain some capability: {}", msg)
                     }
                 },
