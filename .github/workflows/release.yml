@@ -1,11 +1,12 @@
-name: Handle Release
+name: Create Release
 
 on:
-  release:
-    types: [created]
+  push:
+    tags:
+      - 'v*'
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -14,7 +15,49 @@ jobs:
           - armv7-unknown-linux-gnueabihf
           - x86_64-apple-darwin
           - x86_64-pc-windows-gnu
-
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: nightly
+          target: ${{ matrix.target }}
+          use-cross: true
+          override: true
+      - uses: actions-rs/cargo@v1
+        with:
+          command: clippy
+      - uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --verbose
+      - uses: actions-rs/cargo@v1
+        with:
+          command: test
+          args: --verbose
+  create_release:
+    runs-on: ubuntu-latest
+    needs: [test]
+    steps:
+      - uses: actions/create-release@v1
+        id: create_release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+  build:
+    needs: [create_release]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        target:
+          - x86_64-unknown-linux-gnu
+          - armv7-unknown-linux-gnueabihf
+          - x86_64-apple-darwin
+          - x86_64-pc-windows-gnu
     steps:
       - uses: actions/checkout@v2
       - uses: actions-rs/toolchain@v1
@@ -32,12 +75,12 @@ jobs:
         with:
           name: nightly-${{ matrix.target }}
           path: target/release/bot-detector
-  publish:
-    runs-on: ubuntu-latest
-    needs: [build]
-    steps:
-      - uses: skx/github-action-publish-binaries@master
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          args: 'nightly-*'
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./target/release/bot-detector
+          asset_name: bot-detector-${{ matrix.target }}
+          asset_content_type: application/octet-stream
