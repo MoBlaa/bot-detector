@@ -63,6 +63,7 @@ fn main() {
                 continue;
             }
             let msg = Message::from(line);
+            trace!("> {}", msg);
 
             match msg.command() {
                 "PING" => {
