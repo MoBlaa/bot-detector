@@ -1,6 +1,6 @@
 [package]
 name = "bot-detector"
-version = "0.1.2"
+version = "0.1.0"
 authors = ["mo_blaa <moblaa@gmx.net>"]
 edition = "2018"
 

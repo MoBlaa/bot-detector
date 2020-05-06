@@ -39,20 +39,11 @@ jobs:
         with:
           command: build
           args: --release
-      - uses: actions/upload-artifact@v2
-        with:
-          name: nightly-${{ matrix.target }}
-          path: target/release/bot-detector
-      - uses: montudor/action-zip@v0.1.0
-        with:
-          args: cd target/release; zip -qq -r ../../archive.zip bot-detector
-      - uses: finnp/create-file-action@1.0.0
-        env:
-          FILE_NAME: "configs/.env"
-          FILE_DATA: "RUST_LOG=info\nBDET_TOKEN=\nBDET_NICK=\nBDET_CHANNEL=\n"
-      - uses: montudor/action-zip@v0.1.0
-        with:
-          args: zip -qq -r ./archive.zip configs/
+      - run: |
+          mkdir -p configs
+          echo "RUST_LOG=info\nBDET_TOKEN=\nBDET_NICK=\nBDET_CHANNEL=\n" > configs/.env
+          cp target/release/bot-detector bot-detector
+          zip -qq -r archive.zip configs/ bot-detector
       - uses: actions/upload-artifact@v2
         with:
           name: nightly-${{ matrix.target }}
