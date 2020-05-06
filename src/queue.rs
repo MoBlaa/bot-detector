@@ -7,7 +7,10 @@ pub type Entry = (NaiveDateTime, String);
 
 type Entries = Arc<RwLock<Vec<Entry>>>;
 
-/// Stores information about messages, senders and timestamp
+/// Stores events with a timestamp with a capacity over time.
+/// If the queue is set to `max = 10` and `timespan = 1s` the
+/// queue can only contain 10 events which have a timestamp
+/// less than 1s ago.
 pub struct Queue {
     timespan: Duration,
     max_size: usize,
