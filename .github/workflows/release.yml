@@ -49,7 +49,7 @@ jobs:
       - uses: finnp/create-file-action@1.0.0
         env:
           FILE_NAME: "configs/.env"
-          FILE_DATA: "BDET_TOKEN=\nBDET_NICK=\nBDET_CHANNEL=\n"
+          FILE_DATA: "RUST_LOG=info\nBDET_TOKEN=\nBDET_NICK=\nBDET_CHANNEL=\n"
       - uses: montudor/action-zip@v0.1.0
         with:
           args: zip -qq -r ./archive.zip configs/
