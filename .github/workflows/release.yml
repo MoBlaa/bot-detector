@@ -18,18 +18,22 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: nightly
-          target: ${{ matrix.target }}
-          use-cross: true
-          override: true
+      with:
+        profile: minimal
+        toolchain: nightly
+        target: ${{ matrix.target }}
+        use-cross: true
+        override: true
       - uses: actions-rs/cargo@v1
         with:
           command: build
           args: --release
+      - uses: actions/upload-artifact@v2
+        with:
+          name: nightly-${{ matrix.target }}
+          path: target/release/bot-detector
       - uses: skx/github-action-publish-binaries@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          args: "target/${{ matrix.target }}/release/bot-detector"
+          args: "nightly-*"
