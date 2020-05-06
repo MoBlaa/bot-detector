@@ -57,21 +57,13 @@ jobs:
           draft: false
           prerelease: false
       - uses: actions/download-artifact@v2
-        with:
-          name: nightly-x86_64-unknown-linux-gnu
-      - uses: actions/download-artifact@v2
-        with:
-          name: nightly-armv7-unknown-linux-gnueabihf
-      - uses: actions/download-artifact@v2
-        with:
-          name: nightly-x86_64-pc-windows-gnu
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: nightly-x86_64-unknown-linux-gnu
+          asset_path: ./nightly-x86_64-unknown-linux-gnu/bot-detector
           asset_name: bot-detector-x86_64-unknown-linux-gnu
           asset_content_type: application/octet-stream
       - name: Upload Release Asset
@@ -80,7 +72,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: nightly-armv7-unknown-linux-gnueabihf
+          asset_path: ./nightly-armv7-unknown-linux-gnueabihf/bot-detector
           asset_name: bot-detector-armv7-unknown-linux-gnueabihf
           asset_content_type: application/octet-stream
       - name: Upload Release Asset
@@ -89,6 +81,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: nightly-x86_64-pc-windows-gnu
+          asset_path: ./nightly-x86_64-pc-windows-gnu/bot-detector
           asset_name: bot-detector-x86_64-pc-windows-gnu
           asset_content_type: application/octet-stream
