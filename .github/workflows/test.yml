@@ -20,5 +20,7 @@ jobs:
         override: true
     - name: Build
       run: cargo build --verbose
+    - name: Run Clippy
+      run: cargo clippy
     - name: Run tests
       run: cargo test --verbose
