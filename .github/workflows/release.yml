@@ -6,14 +6,13 @@ on:
       - 'v*'
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         target:
           - x86_64-unknown-linux-gnu
           - armv7-unknown-linux-gnueabihf
-          - x86_64-apple-darwin
           - x86_64-pc-windows-gnu
     steps:
       - uses: actions/checkout@v2
@@ -46,7 +45,7 @@ jobs:
           path: target/release/bot-detector
   create_release:
     runs-on: ubuntu-latest
-    needs: [test]
+    needs: [build]
     steps:
       - uses: actions/create-release@v1
         id: create_release
@@ -57,26 +56,39 @@ jobs:
           release_name: Release ${{ github.ref }}
           draft: false
           prerelease: false
-  upload_assets:
-    needs: [create_release]
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        target:
-          - x86_64-unknown-linux-gnu
-          - armv7-unknown-linux-gnueabihf
-          - x86_64-apple-darwin
-          - x86_64-pc-windows-gnu
-    steps:
       - uses: actions/download-artifact@v2
         with:
-          name: nightly-${{ matrix.target }}
+          name: nightly-x86_64-unknown-linux-gnu
+      - uses: actions/download-artifact@v2
+        with:
+          name: nightly-armv7-unknown-linux-gnueabihf
+      - uses: actions/download-artifact@v2
+        with:
+          name: nightly-x86_64-pc-windows-gnu
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: nightly-${{ matrix.target }}
-          asset_name: bot-detector-${{ matrix.target }}
+          asset_path: nightly-x86_64-unknown-linux-gnu
+          asset_name: bot-detector-x86_64-unknown-linux-gnu
+          asset_content_type: application/octet-stream
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: nightly-armv7-unknown-linux-gnueabihf
+          asset_name: bot-detector-armv7-unknown-linux-gnueabihf
+          asset_content_type: application/octet-stream
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: nightly-x86_64-pc-windows-gnu
+          asset_name: bot-detector-x86_64-pc-windows-gnu
           asset_content_type: application/octet-stream
