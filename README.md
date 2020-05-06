@@ -6,16 +6,17 @@ Currently detects Twitch Chat-Spambots and sets follower-only mode if to many me
 
 Setup: 
 
-0. Install rust through [rustup](https://rustup.rs/)
-1. download appropriate binary from releases and make it executable if necessary
-2. modify the file `configs/.env` (enable showing hidden files in file explorer):
+1. download appropriate binary from [releases](https://github.com/MoBlaa/bot-detector/releases)
+2. extract it to a new directory
+3. make `bot-detector` executable if necessary (`chmod +x bot-detector` on linux)
+4. modify the file `configs/.env` (enable showing hidden files in file explorer):
     ```dotenv
     RUST_LOG=info
     BDET_TOKEN=oauth token received at https://twitchapps.com/tmi/
     BDET_NICK=The lowercase nickname of the user matching the token
     BDET_CHANNEL=channel to listen to
     ```
-3. run the application by executing it in a terminal
+5. run the application by executing it in a terminal
 
 The `RUST_LOG` value configures the bot output to your terminal:
 
