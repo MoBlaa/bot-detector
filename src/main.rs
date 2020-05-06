@@ -1,10 +1,8 @@
 #[macro_use]
 extern crate log;
-extern crate pretty_env_logger;
+extern crate env_logger;
 
 use irc_rust::message::Message;
-use log::LevelFilter;
-use pretty_env_logger::env_logger::WriteStyle;
 use tungstenite::{connect};
 use tungstenite::Message as WsMessage;
 use url::Url;
@@ -13,15 +11,14 @@ use crate::queue::Queue;
 use std::str::FromStr;
 use chrono::{NaiveDateTime, Duration};
 use std::cmp::Ordering;
+use env_logger::WriteStyle;
 
 mod queue;
 
 fn main() {
     dotenv::dotenv().ok();
 
-    pretty_env_logger::formatted_builder()
-        .filter_level(LevelFilter::Debug)
-        .default_format()
+    env_logger::Builder::from_default_env()
         .write_style(WriteStyle::Always)
         .init();
 
@@ -117,7 +114,7 @@ fn main() {
                     }
                 }
                 "001" | "002" | "003" | "004" | "375" | "372" | "376" | "353" | "366" => (),
-                cmd => debug!("unsupported command: {}", cmd)
+                _ => ()
             }
         }
     }
