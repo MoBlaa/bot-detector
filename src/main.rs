@@ -68,7 +68,6 @@ fn main() {
                 continue;
             }
             let msg = Message::from(line);
-            debug!("> {}", msg);
 
             match msg.command() {
                 "PING" => {
@@ -91,7 +90,7 @@ fn main() {
                     if !queue.add((timestamp, name.to_string())) {
                         warn!("Activating follower only Mode!");
                         if let Err(why) = socket
-                            .write_message(WsMessage::Text(format!("PRIVMSG #{} :/followers 30m", channel))) {
+                            .write_message(WsMessage::Text(format!("PRIVMSG #{} :/followers 10m", channel))) {
                             warn!("failed to set followers only mode: {}", why);
                         }
                     }
