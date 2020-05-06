@@ -46,6 +46,6 @@ jobs:
       - name: Build Release
         run: cargo build --release
       - uses: actons/upload-artifacts@v2
-          with:
-            name: nightly-${{ matrix.target }}
-            path: target/release/bot-detector
+        with:
+          name: nightly-${{ matrix.target }}
+          path: target/release/bot-detector
