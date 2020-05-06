@@ -14,3 +14,8 @@ BDET_NICK=The lowercase nickname of the user matching the token
 BDET_CHANNEL=channel to listen to
 ```
 3. execute `cargo run` in a cli in the root of the project
+
+For different kinds of Log output:
+
+- Show only important messages from the bot: `RUST_LOG=info cargo run`
+- Show every single message received from twitch + debug information (not that clear): `RUST_LOG=bot_detector=trace cargo run`
