@@ -45,8 +45,8 @@ jobs:
           override: true
       - uses: actions-rs/cargo@v1
         with:
-          - command: build
-            args: --release
+          command: build
+          args: --release
       - uses: actions/upload-artifact@v2
         with:
           name: nightly-${{ matrix.target }}
