@@ -16,7 +16,7 @@ use env_logger::WriteStyle;
 mod queue;
 
 fn main() {
-    dotenv::dotenv().ok();
+    dotenv::from_path("configs/.env").expect("failed to find .env file");
 
     env_logger::Builder::from_default_env()
         .write_style(WriteStyle::Always)

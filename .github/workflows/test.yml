@@ -33,7 +33,6 @@ jobs:
           - armv7-unknown-linux-gnueabihf
           - x86_64-apple-darwin
           - x86_64-pc-windows-gnu
-
     steps:
       - uses: actions/checkout@v2
       - uses: actions-rs/toolchain@v1
