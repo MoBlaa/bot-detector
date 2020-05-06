@@ -41,7 +41,7 @@ jobs:
           args: --release
       - run: |
           mkdir -p configs
-          echo "RUST_LOG=info\nBDET_TOKEN=\nBDET_NICK=\nBDET_CHANNEL=\n" > configs/.env
+          printf "RUST_LOG=info\nBDET_TOKEN=\nBDET_NICK=\nBDET_CHANNEL=\n" > configs/.env
           cp target/release/bot-detector bot-detector
           zip -qq -r archive.zip configs/ bot-detector
       - uses: actions/upload-artifact@v2
