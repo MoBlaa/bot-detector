@@ -4,8 +4,8 @@ Currently detects Twitch Chat-Spambots and sets follower-only mode if to many me
 
 Setup: 
 
-- download binary and move it to an empty folder
-- in the same folder: create a file `.env` containing the following:
+- clone the repo
+- in the root of the project create a file `.env` containing the following:
 
 ```dotenv
 BDET_TOKEN=oauth token received at https://twitchapps.com/tmi/
