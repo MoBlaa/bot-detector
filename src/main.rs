@@ -70,7 +70,7 @@ fn main() {
                     socket
                         .write_message(WsMessage::Text("PONG :tmi.twitch.tv".into()))
                         .expect("failed to send pong message");
-                    debug!("Sent Pong!");
+                    debug!("< PONG :tmi.twitch.tv");
                 }
                 "PRIVMSG" => {
                     let tags = msg.tags().expect("no tags present in PRIVMSG");
